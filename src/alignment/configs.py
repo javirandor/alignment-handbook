@@ -31,7 +31,9 @@ DataClassType = NewType("DataClassType", Any)
 
 
 class H4ArgumentParser(HfArgumentParser):
-    def parse_yaml_and_args(self, yaml_arg: str, other_args: Optional[List[str]] = None) -> List[dataclass]:
+    def parse_yaml_and_args(
+        self, yaml_arg: str, other_args: Optional[List[str]] = None
+    ) -> List[dataclass]:
         """
         Parse a YAML file and overwrite the default/loaded values with the values provided to the command line.
 
@@ -48,7 +50,9 @@ class H4ArgumentParser(HfArgumentParser):
 
         outputs = []
         # strip other args list into dict of key-value pairs
-        other_args = {arg.split("=")[0].strip("-"): arg.split("=")[1] for arg in other_args}
+        other_args = {
+            arg.split("=")[0].strip("-"): arg.split("=")[1] for arg in other_args
+        }
         used_args = {}
 
         # overwrite the default/loaded value with the value provided to the command line
@@ -81,7 +85,9 @@ class H4ArgumentParser(HfArgumentParser):
                     if arg not in used_args:
                         used_args[arg] = val
                     else:
-                        raise ValueError(f"Duplicate argument provided: {arg}, may cause unexpected behavior")
+                        raise ValueError(
+                            f"Duplicate argument provided: {arg}, may cause unexpected behavior"
+                        )
 
             obj = data_class(**inputs)
             outputs.append(obj)
@@ -95,7 +101,9 @@ class H4ArgumentParser(HfArgumentParser):
             output = self.parse_yaml_file(os.path.abspath(sys.argv[1]))
         # parse command line args and yaml file
         elif len(sys.argv) > 2 and sys.argv[1].endswith(".yaml"):
-            output = self.parse_yaml_and_args(os.path.abspath(sys.argv[1]), sys.argv[2:])
+            output = self.parse_yaml_and_args(
+                os.path.abspath(sys.argv[1]), sys.argv[2:]
+            )
         # parse command line args only
         else:
             output = self.parse_args_into_dataclasses()
@@ -113,7 +121,11 @@ class ModelArguments:
 
     base_model_revision: Optional[str] = field(
         default=None,
-        metadata={"help": ("The base model checkpoint for weights initialization with PEFT adapters.")},
+        metadata={
+            "help": (
+                "The base model checkpoint for weights initialization with PEFT adapters."
+            )
+        },
     )
     model_name_or_path: Optional[str] = field(
         default=None,
@@ -125,9 +137,13 @@ class ModelArguments:
     )
     model_revision: str = field(
         default="main",
-        metadata={"help": "The specific model version to use (can be a branch name, tag name or commit id)."},
+        metadata={
+            "help": "The specific model version to use (can be a branch name, tag name or commit id)."
+        },
     )
-    model_code_revision: str = field(default=None, metadata={"help": "The branch of the IFT model"})
+    model_code_revision: str = field(
+        default=None, metadata={"help": "The branch of the IFT model"}
+    )
     torch_dtype: Optional[str] = field(
         default=None,
         metadata={
@@ -146,7 +162,9 @@ class ModelArguments:
             )
         },
     )
-    trust_remote_code: bool = field(default=False, metadata={"help": "Trust remote code when loading a model."})
+    trust_remote_code: bool = field(
+        default=False, metadata={"help": "Trust remote code when loading a model."}
+    )
     attn_implementation: Optional[str] = field(
         default=None,
         metadata={
@@ -185,7 +203,9 @@ class ModelArguments:
     bnb_4bit_quant_type: Optional[str] = field(
         default="nf4", metadata={"help": "precise the quantization type (fp4 or nf4)"}
     )
-    use_bnb_nested_quant: bool = field(default=False, metadata={"help": "use nested quantization"})
+    use_bnb_nested_quant: bool = field(
+        default=False, metadata={"help": "use nested quantization"}
+    )
     bnb_4bit_quant_storage: Optional[str] = field(
         default="uint8",
         metadata={"help": "storage type to pack the quanitzed 4-bit prarams."},
@@ -202,22 +222,34 @@ class DataArguments:
     Arguments pertaining to what data we are going to input our model for training and eval.
     """
 
-    chat_template: Optional[str] = field(default=None, metadata={"help": "The chat template to use."})
+    chat_template: Optional[str] = field(
+        default=None, metadata={"help": "The chat template to use."}
+    )
     dataset_mixer: Optional[Dict[str, float]] = field(
         default=None,
-        metadata={"help": ("Datasets and their proportions to be used for training ift/rl.")},
+        metadata={
+            "help": ("Datasets and their proportions to be used for training ift/rl.")
+        },
     )
     text_column: Optional[str] = field(
         default="text",
-        metadata={"help": "The column name to use for the text in the dataset (only used for continued pretraining)."},
+        metadata={
+            "help": "The column name to use for the text in the dataset (only used for continued pretraining)."
+        },
     )
     dataset_splits: Optional[List[str]] = field(
         default_factory=lambda: ["train", "test"],
         metadata={"help": ("List of train test splits to use in the dataset")},
     )
+    columns_to_keep: Optional[List[str]] = field(
+        default_factory=lambda: ["prompt", "chosen", "rejected"],
+        metadata={"help": ("List of columns to keep from the dataset")},
+    )
     dataset_configs: Optional[List[str]] = field(
         default=None,
-        metadata={"help": "List of dataset config names. If given must be the same length as 'dataset_mixer' keys."},
+        metadata={
+            "help": "List of dataset config names. If given must be the same length as 'dataset_mixer' keys."
+        },
     )
     preprocessing_num_workers: Optional[int] = field(
         default=None,
@@ -249,7 +281,9 @@ class SFTConfig(trl.SFTConfig):
     )
     logging_first_step: bool = field(
         default=True,
-        metadata={"help": ("Whether to log and evaluate the first global_step or not.")},
+        metadata={
+            "help": ("Whether to log and evaluate the first global_step or not.")
+        },
     )
 
 
@@ -265,7 +299,9 @@ class DPOConfig(trl.DPOConfig):
     )
     logging_first_step: bool = field(
         default=True,
-        metadata={"help": ("Whether to log and evaluate the first global_step or not.")},
+        metadata={
+            "help": ("Whether to log and evaluate the first global_step or not.")
+        },
     )
     optim: Optional[str] = field(default="rmsprop")
     remove_unused_columns: bool = field(default=False)
