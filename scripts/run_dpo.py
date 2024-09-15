@@ -21,6 +21,7 @@ import torch
 import hf_olmo
 import transformers
 from transformers import AutoModelForCausalLM, set_seed
+from datasets import disable_caching
 
 from alignment import (
     DataArguments,
@@ -42,7 +43,7 @@ from trl import DPOTrainer
 
 
 logger = logging.getLogger(__name__)
-
+disable_caching()
 
 def main():
     parser = H4ArgumentParser((ModelArguments, DataArguments, DPOConfig))
